@@ -1,200 +1,127 @@
 
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Miauwke de Katbot 😺</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Miauwke the Catbot 🐱</title>
   <style>
     body {
       font-family: Comic Sans MS, cursive;
-      background-color: #f1fdf5;
-      color: #333;
+      background-color: #fffbea;
+      padding: 1rem;
       text-align: center;
-      padding: 1rem;
-      margin: 0;
     }
-
-    .miauwke-container {
-      position: relative;
-      display: inline-block;
-      animation: wiggle 2s infinite;
-    }
-
-    .miauwke-eyes {
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      background: black;
-      top: 60px;
-      left: 70px;
-      animation: blink 3s infinite;
-    }
-
-    .miauwke-eyes::after {
-      content: '';
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      background: black;
-      left: 30px;
-      top: 0;
-      border-radius: 50%;
-    }
-
-    @keyframes wiggle {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(1deg); }
-      75% { transform: rotate(-1deg); }
-    }
-
-    @keyframes blink {
-      0%, 90%, 100% { transform: scaleY(1); }
-      95% { transform: scaleY(0.1); }
-    }
-
-    img {
-      width: 160px;
-    }
-
     #chatbox {
-      max-width: 500px;
-      margin: 1rem auto;
-      text-align: left;
       background: #fff;
+      max-width: 600px;
+      margin: 0 auto 1rem;
       padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .balloon {
-      display: inline-block;
-      padding: 0.7rem;
-      margin: 0.4rem 0;
-      border-radius: 1rem;
-      position: relative;
-      max-width: 80%;
-      line-height: 1.4;
-    }
-
-    .user {
-      background-color: #d0f0ff;
-      align-self: flex-end;
-      border-bottom-right-radius: 0;
-      margin-left: auto;
-    }
-
-    .miauwke {
-      background-color: #ccf5d1;
-      align-self: flex-start;
-      border-bottom-left-radius: 0;
-      margin-right: auto;
-    }
-
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .button-group button {
-      padding: 0.6rem 1rem;
-      border: none;
-      background: #a3f7bf;
-      color: #333;
       border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
+      box-shadow: 0 0 5px #aaa;
+      text-align: left;
     }
-
-    .button-group button:hover {
-      background: #79e1a4;
-    }
-
     input, button {
       font-size: 1rem;
+      padding: 0.5rem;
+      margin: 0.2rem;
     }
-
-    @media (max-width: 600px) {
-      img { width: 120px; }
-      input { width: 80%; }
+    .quiz-btn {
+      margin: 0.3rem;
+      padding: 0.5rem 1rem;
     }
   </style>
 </head>
 <body>
 
-  <h1>Miauwke de Katbot 🐾</h1>
+<h1>Miauwke the Catbot 😺</h1>
+<div id="chatbox">
+  <p><strong>Miauwke:</strong> Hi there! Ask me a question or play the quiz! 😸</p>
+</div>
 
-  <div class="miauwke-container">
-    <img src="miauwke.png" alt="Miauwke">
-    <div class="miauwke-eyes"></div>
-  </div>
+<input type="text" id="input" placeholder="Ask me something..." />
+<button onclick="sendMessage()">Send</button>
+<button onclick="startQuiz()">🎯 Start Quiz</button>
 
-  <div id="chatbox">
-    <div class="balloon miauwke">🐱 Miauw! Ik ben Miauwke! Klik op een vraag of stel er zelf één!</div>
-  </div>
+<div id="quizbox" style="margin-top:1rem;"></div>
 
-  <div class="button-group">
-    <button onclick="voorgedefinieerdAntwoord('hallo')">Hallo</button>
-    <button onclick="voorgedefinieerdAntwoord('hoe maak ik een screenshot')">Screenshot maken</button>
-    <button onclick="voorgedefinieerdAntwoord('ik ben mijn wachtwoord vergeten')">Wachtwoord vergeten</button>
-    <button onclick="voorgedefinieerdAntwoord('wie ben jij')">Wie ben jij?</button>
-    <button onclick="voorgedefinieerdAntwoord('bedankt')">Bedankt</button>
-  </div>
+<script>
+  const chatbox = document.getElementById("chatbox");
+  const inputBox = document.getElementById("input");
+  const quizbox = document.getElementById("quizbox");
+  const memory = [];
 
-  <input type="text" id="input" placeholder="Typ je vraag..." />
-  <button onclick="sendMessage()">Stuur</button>
+  const answers = {
+    "hello": "Meowdy! I'm Miauwke. Ready to answer anything!",
+    "how do you make slime": "Use glue, baking soda, and contact lens solution. Ask an adult first!",
+    "what is minecraft": "It's a game where you build with blocks and avoid creepers!",
+    "what is 100 divided by 4": "That's 25! Even with my paws I know that!",
+    "what is the biggest planet": "That's Jupiter! Like a giant bouncy gas ball!",
+    "how old are you": "I’m ageless! But if you must know... I'm kitten years old!",
+    "can cats talk": "Yes! At least the smart ones like me 😼",
+    "do you like fish": "Absolutely! Especially tuna. Want to share?",
+    "why do cats purr": "We purr when we're happy, comfy, or pretending to be sweet 😸",
+    "how many lives do cats have": "9, of course! But I plan to use only 3... maybe 4.",
+    "what is the fastest animal": "Cheetahs in the wild, but I’m fastest on the couch!",
+    "what is your name": "I'm Miauwke! Your favorite digital cat assistant."
+  };
 
-  <audio id="miauw-geluid" src="miauw.mp3" preload="auto"></audio>
+  function addMessage(text, sender) {
+    const p = document.createElement("p");
+    p.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chatbox.appendChild(p);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
 
-  <script>
-    const chatbox = document.getElementById('chatbox');
-    const geluid = document.getElementById('miauw-geluid');
+  function sendMessage() {
+    const msg = inputBox.value.trim();
+    if (!msg) return;
+    addMessage(msg, "You");
+    memory.push(msg);
+    const key = Object.keys(answers).find(k => msg.toLowerCase().includes(k));
+    const reply = key ? answers[key] : `Hmm... I don't know, but earlier you asked: "${memory[0]}" 😺`;
+    addMessage(reply, "Miauwke");
+    inputBox.value = "";
+  }
 
-    const antwoorden = {
-      "hallo": "Miauw! Hoi daar, kleine muizenvanger!",
-      "hoe maak ik een screenshot": "Simpele pootklap! Druk op Shift + Windows + S 🐾",
-      "ik ben mijn wachtwoord vergeten": "Oei! Vraag even hulp aan een grote mens 🧑 of klik op 'wachtwoord vergeten'!",
-      "wie ben jij": "Ik ben Miauwke, je slimme maar eigenwijze kattenvriend! 😸",
-      "bedankt": "Graag gedaan! Geef me een virtuele knuffel! 🐾💚"
-    };
+  const quiz = [
+    { q: "What do cats use to clean themselves?", options: ["Their tail", "Their tongue", "A sponge"], a: 1 },
+    { q: "How many lives does a cat have?", options: ["1", "9", "5"], a: 1 },
+    { q: "Which food do cats love most?", options: ["Tuna", "Banana", "Carrot"], a: 0 },
+    { q: "What sound do cats make?", options: ["Woof", "Moo", "Meow"], a: 2 },
+    { q: "Where do cats usually sleep?", options: ["In trees", "In cozy spots", "In the fridge"], a: 1 }
+  ];
 
-    function miauwSpelen() {
-      geluid.currentTime = 0;
-      geluid.play();
+  let quizIndex = 0;
+
+  function startQuiz() {
+    quizIndex = 0;
+    quizbox.innerHTML = "";
+    showQuizQuestion();
+  }
+
+  function showQuizQuestion() {
+    if (quizIndex >= quiz.length) {
+      quizbox.innerHTML = "<p>Quiz finished! You're pawsome! 🐾</p>";
+      return;
     }
-
-    function voegBerichtToe(tekst, klasse) {
-      const div = document.createElement('div');
-      div.className = `balloon ${klasse}`;
-      div.innerText = tekst;
-      chatbox.appendChild(div);
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }
-
-    function stuurReactie(vraag) {
-      voegBerichtToe("👧 " + vraag, "user");
-      const key = Object.keys(antwoorden).find(k => vraag.includes(k));
-      const reactie = key ? antwoorden[key] : "Miauw? Dat weet ik nog niet... Misschien probeer je het anders? 😼";
-      voegBerichtToe("🐱 " + reactie, "miauwke");
-      miauwSpelen();
-    }
-
-    function sendMessage() {
-      const input = document.getElementById('input');
-      const vraag = input.value.toLowerCase();
-      if (!vraag) return;
-      stuurReactie(vraag);
-      input.value = '';
-    }
-
-    function voorgedefinieerdAntwoord(vraag) {
-      stuurReactie(vraag);
-    }
-  </script>
+    const q = quiz[quizIndex];
+    quizbox.innerHTML = `<p><strong>${q.q}</strong></p>`;
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.className = "quiz-btn";
+      btn.textContent = opt;
+      btn.onclick = () => {
+        const correct = i === q.a;
+        addMessage(q.q, "Quiz");
+        addMessage(correct ? "Correct! 😺" : "Oops, not quite!", "Miauwke");
+        quizIndex++;
+        showQuizQuestion();
+      };
+      quizbox.appendChild(btn);
+    });
+  }
+</script>
 
 </body>
 </html>
