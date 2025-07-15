@@ -1,138 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Miauwke de Katbot 🐱</title>
-  <style>
-    body {
-      font-family: Comic Sans MS, cursive;
-      background-color: #fffbea;
-      padding: 1rem;
-      text-align: center;
-    }
-    #chatbox {
-      background: #fff;
-      max-width: 600px;
-      margin: 0 auto 1rem;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 0 5px #aaa;
-      text-align: left;
-      min-height: 150px;
-    }
-    input, button {
-      font-size: 1rem;
-      padding: 0.5rem;
-      margin: 0.2rem;
-    }
-    .quiz-btn {
-      margin: 0.3rem;
-      padding: 0.5rem 1rem;
-    }
-    .miauwke-animatie {
-      display: inline-block;
-      animation: shake 0.4s;
-    }
-    @keyframes shake {
-      0% { transform: rotate(0deg); }
-      25% { transform: rotate(3deg); }
-      50% { transform: rotate(-3deg); }
-      75% { transform: rotate(3deg); }
-      100% { transform: rotate(0deg); }
-    }
-  </style>
 </head>
 <body>
-
-<h1>Miauwke de Katbot 😺</h1>
-<div id="chatbox">
-  <p><strong>Miauwke:</strong> Hoi! Stel me een vraag of speel de quiz! 😸</p>
-</div>
-
-<input type="text" id="input" placeholder="Typ hier je vraag..." />
-<button onclick="sendMessage()">Verstuur</button>
-<button onclick="startQuiz()">🎯 Start Quiz</button>
-
-<div id="quizbox" style="margin-top:1rem;"></div>
-
-<script>
-  const chatbox = document.getElementById("chatbox");
-  const inputBox = document.getElementById("input");
-  const quizbox = document.getElementById("quizbox");
-  const geheugen = [];
-
-  const antwoorden = {
-    "hallo": "Meow! Ik ben Miauwke. Klaar om je te helpen!",
-    "hoe maak je slijm": "Gebruik lijm, baking soda en lenzenvloeistof. Vraag wel een volwassene!",
-    "wat is minecraft": "Een spel waar je bouwt met blokken en creepers ontwijkt!",
-    "wat is 100 gedeeld door 4": "Dat is 25! Easy peasy 😸",
-    "wat is de grootste planeet": "Jupiter! Een reusachtige gasbal!",
-    "hoe oud ben je": "Ik ben tijdloos... maar voel me als een kitten!",
-    "kunnen katten praten": "Jazeker! Je praat nu met een 😼",
-    "hou je van vis": "Túúrlijk! Vooral tonijn. Deel je mee?",
-    "waarom spinnen katten": "Omdat we blij of ontspannen zijn. Of om snoepjes te krijgen!",
-    "hoeveel levens hebben katten": "9 natuurlijk! Maar ik gebruik er hooguit 4.",
-    "wat is het snelste dier": "De cheeta! Maar ik ben sneller in de keuken!",
-    "hoe heet jij": "Ik ben Miauwke! Je favoriete digitale kattenhulpje!"
-  };
-
-  function voegBerichtToe(tekst, afzender, animatie = false) {
-    const p = document.createElement("p");
-    p.innerHTML = `<strong>${afzender}:</strong> <span class="${animatie ? 'miauwke-animatie' : ''}">${tekst}</span>`;
-    chatbox.appendChild(p);
-    chatbox.scrollTop = chatbox.scrollHeight;
-  }
-
-  function sendMessage() {
-    const bericht = inputBox.value.trim().toLowerCase();
-    if (!bericht) return;
-    voegBerichtToe(bericht, "Jij");
-    geheugen.push(bericht);
-    const sleutel = Object.keys(antwoorden).find(k => bericht.includes(k));
-    const reactie = sleutel ? antwoorden[sleutel] : `Hmm... dat weet ik niet, maar eerder vroeg je: "${geheugen[0]}" 😺`;
-    voegBerichtToe(reactie, "Miauwke", true);
-    inputBox.value = "";
-  }
-
-  const quiz = [
-    { vraag: "Waarmee wassen katten zichzelf?", opties: ["Met hun staart", "Met hun tong", "Met een spons"], juist: 1 },
-    { vraag: "Hoeveel levens heeft een kat?", opties: ["1", "9", "5"], juist: 1 },
-    { vraag: "Wat eten katten het liefst?", opties: ["Tonijn", "Banaan", "Wortel"], juist: 0 },
-    { vraag: "Welk geluid maakt een kat?", opties: ["Woef", "Miauw", "Boe"], juist: 1 },
-    { vraag: "Waar slapen katten graag?", opties: ["In een boom", "Op een warme plek", "In de koelkast"], juist: 1 }
-  ];
-
-  let quizIndex = 0;
-
-  function startQuiz() {
-    quizIndex = 0;
-    quizbox.innerHTML = "";
-    toonVolgendeVraag();
-  }
-
-  function toonVolgendeVraag() {
-    if (quizIndex >= quiz.length) {
-      quizbox.innerHTML = "<p>De quiz is klaar! Goed gedaan! 🐾</p>";
-      return;
-    }
-    const q = quiz[quizIndex];
-    quizbox.innerHTML = `<p><strong>${q.vraag}</strong></p>`;
-    q.opties.forEach((optie, i) => {
-      const knop = document.createElement("button");
-      knop.className = "quiz-btn";
-      knop.textContent = optie;
-      knop.onclick = () => {
-        const goed = i === q.juist;
-        voegBerichtToe(q.vraag, "Quiz");
-        voegBerichtToe(goed ? "Goed zo! 😺" : "Oeps, dat is niet helemaal juist!", "Miauwke", true);
-        quizIndex++;
-        toonVolgendeVraag();
-      };
-      quizbox.appendChild(knop);
-    });
-  }
-</script>
-
+  <h1>Miauwke de Katbot 😺</h1>
+  <div id="chat" style="max-width:600px; margin:1rem auto; background:#fffbe6; padding:1rem; border-radius:10px;"></div>
+  <input id="input" type="text" placeholder="Typ iets..." />
+  <button onclick="verstuur()">Verstuur</button>
+  <script src="script.js"></script>
 </body>
 </html>
